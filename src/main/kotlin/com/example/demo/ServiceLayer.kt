@@ -1,8 +1,5 @@
 package com.example.demo
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.annotation.JsonTypeName
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -44,37 +41,24 @@ data class Editor(
 	val editorContent: List<EditorContent>
 )
 
-@JsonTypeInfo(
-	use = JsonTypeInfo.Id.CLASS,
-	include = JsonTypeInfo.As.EXISTING_PROPERTY,
-	property = "editorType.name"
-)
-@JsonSubTypes(
-	JsonSubTypes.Type(value = TitleA::class),
-	JsonSubTypes.Type(value = TitleB::class),
-	JsonSubTypes.Type(value = Image::class)
-)
 interface EditorContent {
 	fun getEditorType(): EditorType
 }
 
 @Document("editor")
-@TypeAlias("TITLE_A")
-//@JsonTypeName("TITLE_A")
+@TypeAlias("TitleA")
 class TitleA(val title: String) : EditorContent{
 	override fun getEditorType() = EditorType.TITLE_A
 }
 
 @Document("editor")
-@TypeAlias("TITLE_B")
-//@JsonTypeName("TITLE_B")
+@TypeAlias("TitleB")
 class TitleB(val title: String, val subTitle: String) : EditorContent {
 	override fun getEditorType() = EditorType.TITLE_B
 }
 
 @Document("editor")
-@TypeAlias("IMAGE")
-//@JsonTypeName("IMAGE")
+@TypeAlias("Image")
 class Image(val imageUrl: String, val imageThumbnail: String) : EditorContent {
 	override fun getEditorType() = EditorType.IMAGE
 }
