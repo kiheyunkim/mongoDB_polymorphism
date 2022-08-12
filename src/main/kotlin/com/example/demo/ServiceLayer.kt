@@ -28,37 +28,18 @@ class ServiceLayer(val mongoTemplate: MongoTemplate) {
 	fun getEditor(id: Long): Editor {
 		return mongoTemplate.findById(id, Editor::class.java) ?: Editor(1, "1", listOf())
 	}
-}
 
-enum class EditorType {
-	TITLE_A, TITLE_B, IMAGE
-}
+	fun addEditorV2(id: Long): Boolean {
+		val titleAEditor = TitleAV2(id, "TITLEA")
+		mongoTemplate.save(titleAEditor)
 
-@Document("editor")
-data class Editor(
-	@field:Id val id: Long,
-	val EditorTitle: String,
-	val editorContent: List<EditorContent>
-)
+		val titleBEditor = TitleBV2(id + 1, "TITLEB", "subTitle")
+		mongoTemplate.save(titleBEditor)
 
-interface EditorContent {
-	fun getEditorType(): EditorType
-}
+		return true
+	}
 
-@Document("editor")
-@TypeAlias("TitleA")
-class TitleA(val title: String) : EditorContent{
-	override fun getEditorType() = EditorType.TITLE_A
-}
-
-@Document("editor")
-@TypeAlias("TitleB")
-class TitleB(val title: String, val subTitle: String) : EditorContent {
-	override fun getEditorType() = EditorType.TITLE_B
-}
-
-@Document("editor")
-@TypeAlias("Image")
-class Image(val imageUrl: String, val imageThumbnail: String) : EditorContent {
-	override fun getEditorType() = EditorType.IMAGE
+	fun getEditorV2(id: Long): EditorV2? {
+		return mongoTemplate.findById(id, EditorV2::class.java)
+	}
 }

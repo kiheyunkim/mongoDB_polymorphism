@@ -15,6 +15,8 @@ interface EditorContent {
 	fun getEditorType(): EditorType
 }
 //해당 대상들은 spring-mongo-data에는 필요가 없음.
+//만약 RequestBody등으로 받아들일때는 필요로 함.
+
 ```
 
 @JsonTypeInfo와 @JsonSubType는 몽고db에서는 이용치 않음
@@ -28,3 +30,5 @@ TypeAlias를 스캔함
 reference: https://github.com/spring-projects/spring-data-mongodb/issues/3321
 
 만약 SubType에 document지정을 안해주면 interface(또는 abstract class) instantiate를 실패했다는 오류가 발생함.
+
+부모타입에도 property를 가지고 싶으면 class를 사용해야하며(data class는 모든 생성자에 들어간 것이 property로 선언됨) 이를 상속하는 구조로 가지면된다. 또 조회할때는 super Type을 통해 조회하면 sub Type으로 돌려준다.
